@@ -21,3 +21,5 @@ client.connect()
     console.error('Full Error:', err);
     process.exit(1);
   });
+
+  testConnection();

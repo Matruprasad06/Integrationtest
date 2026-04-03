@@ -30,13 +30,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20   # 🔥 change from 24 → 20 (stable)
 
       - name: Install Dependencies
         run: npm install
-
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Wait for PostgreSQL
         run: |
@@ -48,8 +45,9 @@ jobs:
 
       - name: Run DB Connection Test
         env:
-          POSTGRES_HOST: localhost
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpass
-          POSTGRES_DB: testdb
+          PGHOST: localhost
+          PGUSER: testuser
+          PGPASSWORD: testpass
+          PGDATABASE: testdb
+          PGPORT: 5432
         run: npm run test-db
