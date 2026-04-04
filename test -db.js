@@ -1,25 +1,24 @@
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
-const client = new Client({
-  host: process.env.POSTGRES_HOST,
-  port: 5432,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
+const pool = new Pool({
+  host: process.env.PGHOST,
+  port: process.env.PGPORT,
+  user: process.env.PGUSER,
+  password: process.env.PGPASSWORD,
+  database: process.env.PGDATABASE,
 });
 
-console.log("HOST:", process.env.POSTGRES_HOST);
-console.log("USER:", process.env.POSTGRES_USER);
-console.log("DB:", process.env.POSTGRES_DB);
-
-client.connect()
-  .then(() => {
-    console.log('✓ Successfully connected to PostgreSQL');
-    client.end();
-  })
-  .catch(err => {
-    console.error('Full Error:', err);
+async function testConnection() {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    console.log('✓ Database connection successful:', result.rows[0]);
+    process.exit(0);
+  } catch (error) {
+    console.error('✗ Database connection failed:', error.message);
     process.exit(1);
-  });
+  } finally {
+    await pool.end();
+  }
+}
 
-  testConnection();
+testConnection();
